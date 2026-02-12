@@ -1,20 +1,19 @@
-# Grupo1_Vera_Ferro
-# Documento del Proyecto
+# 📘 Documento del Proyecto
 
-## Descripción
+## 📝 Descripción
 
-## Objetivos
+## 🎯 Objetivos
 
-## Tecnologías / Herramientas
+## 🛠️ Tecnologías / Herramientas
 
-* VS Code
-* Python
-* Docker
-* WSL
-* PostgreSQL
-* Jupyter Notebook
+* 💻 VS Code
+* 🐍 Python
+* 🐳 Docker
+* 🐧 WSL
+* 🗄️ PostgreSQL
+* 📊 Jupyter Notebook
 
-## Estructura del Proyecto
+## 🗂️ Estructura del Proyecto
 
 ## 👥 Actores
 
