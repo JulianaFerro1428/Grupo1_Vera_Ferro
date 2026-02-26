@@ -2,12 +2,6 @@
 
 ## 📝 Descripción
 
-## 🎯 Objetivos
-
-## 🛠️ Tecnologías / Herramientas# 📘 Documento del Proyecto
-
-## 📝 Descripción
-
 Este proyecto desarrolla un pipeline ETL (Extract, Transform, Load) para la recolección, procesamiento y análisis de datos climáticos utilizando la API de OpenWeather.
 
 El sistema extrae información meteorológica en tiempo real a partir de coordenadas geográficas dentro de Estados Unidos, procesa los datos relevantes y los almacena en formatos estructurados (JSON, CSV y PostgreSQL).
