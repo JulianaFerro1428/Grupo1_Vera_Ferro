@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 class OpenWeatherExtractor:
 
-    def __init__(self, total_ciudades=100):
+    def __init__(self, total_ciudades=5):
         self.api_key = os.getenv("API_KEY")
         self.base_url = os.getenv("OPENWEATHER_URL")
         self.total_ciudades = total_ciudades
@@ -41,11 +41,17 @@ class OpenWeatherExtractor:
         if not self.base_url:
             raise ValueError("OPENWEATHER_URL no configurada en .env")
 
-    def generar_coordenadas(self):
-        lat = random.uniform(-60, 75)   # evitamos polos extremos
-        lon = random.uniform(-180, 180)
+    # ==============================
+    # Generar coordenadas dentro de USA
+    # ==============================
+    def generar_coordenadas_us(self):
+        lat = random.uniform(24.5, 49.5)
+        lon = random.uniform(-125, -66)
         return lat, lon
 
+    # ==============================
+    # Extraer datos desde la API
+    # ==============================
     def extraer_clima(self, lat, lon):
         try:
             params = {
@@ -65,16 +71,21 @@ class OpenWeatherExtractor:
             logger.error(f"❌ Error en coordenadas {lat},{lon}: {str(e)}")
             return None
 
+    # ==============================
+    # Procesar respuesta correcta
+    # ==============================
     def procesar_respuesta(self, data):
         try:
-            ciudad = data.get("name")
+            ciudad = data.get("name")  # 👈 CORREGIDO
+            pais = data.get("sys", {}).get("country")  # 👈 CORREGIDO
 
-            if not ciudad:
-                return None  # ignoramos océanos
+            # Filtrar solo Estados Unidos
+            if not ciudad or pais != "US":
+                return None
 
             return {
                 "ciudad": ciudad,
-                "pais": data.get("sys", {}).get("country"),
+                "pais": pais,
                 "latitud": data.get("coord", {}).get("lat"),
                 "longitud": data.get("coord", {}).get("lon"),
                 "temperatura": data.get("main", {}).get("temp"),
@@ -90,15 +101,18 @@ class OpenWeatherExtractor:
             logger.error(f"❌ Error procesando datos: {str(e)}")
             return None
 
+    # ==============================
+    # Ejecutar extracción
+    # ==============================
     def ejecutar_extraccion(self):
         ciudades_unicas = set()
         datos = []
 
-        logger.info(f"Generando {self.total_ciudades} ciudades únicas...")
+        logger.info(f"Generando {self.total_ciudades} ciudades de EE.UU...")
 
         while len(ciudades_unicas) < self.total_ciudades:
 
-            lat, lon = self.generar_coordenadas()
+            lat, lon = self.generar_coordenadas_us()
             response = self.extraer_clima(lat, lon)
 
             if response:
@@ -110,16 +124,21 @@ class OpenWeatherExtractor:
                     if ciudad not in ciudades_unicas:
                         ciudades_unicas.add(ciudad)
                         datos.append(procesado)
-                        logger.info(f"✅ {ciudad} agregada ({len(ciudades_unicas)}/{self.total_ciudades})")
+                        logger.info(
+                            f"✅ {ciudad} agregada ({len(ciudades_unicas)}/{self.total_ciudades})"
+                        )
 
-            time.sleep(1)  # evitar rate limit
+            time.sleep(1)  # Evitar rate limit (plan gratuito)
 
         return datos
 
 
+# ==============================
+# MAIN
+# ==============================
 if __name__ == "__main__":
     try:
-        extractor = OpenWeatherExtractor(total_ciudades=100)
+        extractor = OpenWeatherExtractor(total_ciudades=5)
         datos = extractor.ejecutar_extraccion()
 
         os.makedirs("data", exist_ok=True)
