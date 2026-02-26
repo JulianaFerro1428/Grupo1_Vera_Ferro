@@ -79,6 +79,9 @@ Grupo1_Vera_Ferro/
 ├── 📄 README.md
 │
 └── 📄 requirements.txt
+```
+
+---
 
 ## 👥 Actores
 
